@@ -1,4 +1,24 @@
-import { QUIT_DATE, translations } from './benefits.js';
+import { QUIT_DATE, translations, initBenefits } from './benefits.js';
+import { getFingerprint } from './fingerprint.js';
+
+// Init benefits
+initBenefits();
+
+// Track visit
+async function trackVisit() {
+    try {
+        const fingerprint = await getFingerprint();
+        await fetch('/.netlify/functions/track-visit', {
+            method: 'POST',
+            body: JSON.stringify({ fingerprint }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+    } catch (e) {
+        console.error('Tracking failed', e);
+    }
+}
+
+trackVisit();
 
 let currentLang = localStorage.getItem('language') || 'de';
 

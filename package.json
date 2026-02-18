@@ -1,0 +1,14 @@
+{
+  "name": "smokefree",
+  "version": "1.0.0",
+  "description": "Smoke Free tracking project",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^7.3.0",
+    "@netlify/functions": "^2.6.0"
+  }
+}

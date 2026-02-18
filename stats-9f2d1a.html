@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - Hidden</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --accent: #38bdf8;
+            --secondary: #94a3b8;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--card);
+            padding-bottom: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .fingerprint {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--secondary);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Analytics Overview</h1>
+        </header>
+
+        <div id="dashboard">
+            <div class="loading">Loading statistics...</div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchStats() {
+            try {
+                const response = await fetch('/.netlify/functions/get-stats');
+                const data = await response.json();
+                renderDashboard(data);
+            } catch (e) {
+                document.getElementById('dashboard').innerHTML = '<div class="loading">Error loading stats. Make sure you are running on Netlify.</div>';
+            }
+        }
+
+        function renderDashboard(data) {
+            const html = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value">${data.stats.totalVisits}</span>
+                        <span class="stat-label">Total Visits</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">${data.stats.uniqueVisitors}</span>
+                        <span class="stat-label">Unique Visitors</span>
+                    </div>
+                </div>
+
+                <h2>Recent Visitors</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fingerprint</th>
+                            <th>First Visit</th>
+                            <th>Last Visit</th>
+                            <th>Visits</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.visitors.map(v => `
+                            <tr>
+                                <td class="fingerprint">${v.fingerprint.substring(0, 16)}...</td>
+                                <td>${new Date(v.firstVisit).toLocaleString()}</td>
+                                <td>${new Date(v.lastVisit).toLocaleString()}</td>
+                                <td>${v.visitCount}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('dashboard').innerHTML = html;
+        }
+
+        fetchStats();
+    </script>
+</body>
+
+</html>
