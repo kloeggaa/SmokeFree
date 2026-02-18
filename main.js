@@ -1,7 +1,14 @@
-import { QUIT_DATE, healthBenefits } from './benefits.js';
+import { QUIT_DATE, translations } from './benefits.js';
+
+let currentLang = localStorage.getItem('language') || 'de';
+
+function getT() {
+    return translations[currentLang];
+}
 
 function formatTimeRemaining(ms) {
-    if (ms <= 0) return 'Congratulations - you did it!';
+    const t = getT();
+    if (ms <= 0) return t.congratulations;
 
     const seconds = Math.floor(ms / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -12,20 +19,21 @@ function formatTimeRemaining(ms) {
     const h = hours % 24;
     const m = minutes % 60;
 
-    let result = 'Reached in: ';
-    if (d > 0) result += `${d} days `;
-    if (h > 0 || d > 0) result += `${h} hours `;
-    result += `${m} minutes`;
+    let result = `${t.reachedIn}: `;
+    if (d > 0) result += `${d} ${t.units.days} `;
+    if (h > 0 || d > 0) result += `${h} ${t.units.hours} `;
+    result += `${m} ${t.units.minutes}`;
 
     return result;
 }
 
 function renderBenefits() {
+    const t = getT();
     const container = document.getElementById('benefits-container');
     const now = new Date();
     const elapsedMs = now - QUIT_DATE;
 
-    container.innerHTML = healthBenefits.map((benefit, index) => {
+    container.innerHTML = t.benefits.map((benefit, index) => {
         const remainingMs = benefit.duration - elapsedMs;
         const progress = Math.min(100, Math.max(0, (elapsedMs / benefit.duration) * 100));
         const isComplete = progress >= 100;
@@ -53,7 +61,7 @@ function renderBenefits() {
 
     // Trigger animations after a small delay
     setTimeout(() => {
-        healthBenefits.forEach((_, index) => {
+        t.benefits.forEach((_, index) => {
             const bar = document.getElementById(`bar-${index}`);
             if (bar) {
                 const target = bar.getAttribute('data-target');
@@ -63,10 +71,37 @@ function renderBenefits() {
     }, 100);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function updateUI() {
+    const t = getT();
+    document.title = t.title;
+    document.querySelector('h1').textContent = t.title;
+
     // Format quit date display
     const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    document.getElementById('quit-date-display').textContent = `Quit Date: ${QUIT_DATE.toLocaleDateString(undefined, options)}`;
+    const locale = currentLang === 'de' ? 'de-DE' : 'en-US';
+    document.getElementById('quit-date-display').textContent = `${t.quitDate}: ${QUIT_DATE.toLocaleDateString(locale, options)}`;
 
     renderBenefits();
+
+    // Update active class on selector
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === currentLang);
+    });
+}
+
+function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('language', lang);
+    updateUI();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Add click listeners to language buttons (they will be added to HTML soon)
+    document.body.addEventListener('click', (e) => {
+        if (e.target.classList.contains('lang-btn')) {
+            setLanguage(e.target.dataset.lang);
+        }
+    });
+
+    updateUI();
 });
