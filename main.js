@@ -1,8 +1,5 @@
-import { QUIT_DATE, translations, initBenefits } from './benefits.js';
+import { QUIT_DATE, translations } from './benefits.js';
 import { getFingerprint } from './fingerprint.js';
-
-// Init benefits
-initBenefits();
 
 // Track visit
 async function trackVisit() {
