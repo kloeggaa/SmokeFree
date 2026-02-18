@@ -1,0 +1,133 @@
+:root {
+  --bg-color: #121212;
+  --card-bg: #1e1e1e;
+  --text-main: #e0e0e0;
+  --text-dim: #a0a0a0;
+  --accent: #ffa726; /* Orange from screenshots */
+  --progress-bg: #2c2c2c;
+  --progress-fill: #ffa726;
+  --progress-success: #00897b; /* Teal from screenshots */
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --spacing: 1.5rem;
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: var(--font-family);
+  line-height: 1.6;
+  padding: var(--spacing);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing);
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.quit-date {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+
+.benefit-card {
+  background-color: var(--card-bg);
+  padding: var(--spacing);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-2px);
+}
+
+.benefit-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.benefit-duration {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+.benefit-description {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  margin-bottom: 1.25rem;
+}
+
+.progress-container {
+  height: 8px;
+  background-color: var(--progress-bg);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background-color: var(--progress-fill);
+  border-radius: 4px;
+  transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-bar.complete {
+  background-color: var(--progress-success);
+}
+
+.status-text {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--text-dim);
+  display: flex;
+  justify-content: space-between;
+}
+
+.status-done {
+  color: var(--progress-success);
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  :root {
+    --spacing: 1rem;
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+  }
+}
