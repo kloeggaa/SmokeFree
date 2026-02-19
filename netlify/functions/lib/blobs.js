@@ -1,4 +1,4 @@
-import { getStore as getNetlifyStore } from "@netlify/blobs";
+import { getStore as getNetlifyStore, connectLambda } from "@netlify/blobs";
 import fs from "fs/promises";
 import path from "path";
 
@@ -48,7 +48,17 @@ class MockStore {
     }
 }
 
-export function getStore(name) {
+export function getStore(name, event) {
+    // For V1 functions (Lambda compatibility mode), we must manually connect the environment
+    // using the event object.
+    if (event) {
+        try {
+            connectLambda(event);
+        } catch (e) {
+            // Ignore if connectLambda fails (e.g. if event doesn't have blobs data)
+        }
+    }
+
     try {
         // Try to get the real store
         return getNetlifyStore(name);

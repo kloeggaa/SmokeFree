@@ -2,7 +2,7 @@ import { getStore } from "./lib/blobs.js";
 
 export const handler = async (event) => {
     try {
-        const store = getStore("analytics");
+        const store = getStore("analytics", event);
         const stats = await store.get("stats", { type: "json" }) || { totalVisits: 0, uniqueVisitors: 0 };
 
         // List all visitors

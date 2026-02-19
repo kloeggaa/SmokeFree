@@ -11,7 +11,7 @@ export const handler = async (event) => {
             return { statusCode: 400, body: "Fingerprint missing" };
         }
 
-        const store = getStore("analytics");
+        const store = getStore("analytics", event);
         const now = new Date().toISOString();
 
         // Get current stats
