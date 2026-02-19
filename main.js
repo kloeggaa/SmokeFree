@@ -4,18 +4,26 @@ import { getFingerprint } from './fingerprint.js';
 // Track visit
 async function trackVisit() {
     try {
-        const fingerprint = await getFingerprint();
-        await fetch('/.netlify/functions/track-visit', {
-            method: 'POST',
-            body: JSON.stringify({ fingerprint }),
-            headers: { 'Content-Type': 'application/json' }
-        });
+        const fingerprintResult = await getFingerprint();
+        // Use a timeout to ensure this doesn't block UI logic even if wait-states occur
+        setTimeout(async () => {
+            try {
+                await fetch('/.netlify/functions/track-visit', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        fingerprint: fingerprintResult.hash,
+                        data: fingerprintResult.data
+                    }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            } catch (innerError) {
+                console.warn('Backend tracking failed', innerError);
+            }
+        }, 100);
     } catch (e) {
-        console.error('Tracking failed', e);
+        console.warn('Fingerprinting failed', e);
     }
 }
-
-trackVisit();
 
 let currentLang = localStorage.getItem('language') || 'de';
 
@@ -121,4 +129,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     updateUI();
+    trackVisit();
 });

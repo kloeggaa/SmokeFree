@@ -93,6 +93,43 @@
             font-family: monospace;
             font-size: 0.8rem;
             color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .visitor-row {
+            cursor: pointer;
+        }
+
+        .unfold-icon {
+            font-size: 0.6rem;
+            transition: transform 0.2s;
+            display: inline-block;
+            color: var(--accent);
+        }
+
+        .unfold-icon.open {
+            transform: rotate(90deg);
+        }
+
+        .details-row {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .details-content {
+            padding: 1rem;
+            font-size: 0.8rem;
+            background: #000;
+            border-radius: 8px;
+            margin: 0.5rem;
+            max-height: 400px;
+            overflow: auto;
+        }
+
+        .details-content pre {
+            margin: 0;
+            color: #a5f3fc;
         }
 
         .loading {
@@ -148,19 +185,41 @@
                             <th>Visits</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        ${data.visitors.map(v => `
-                            <tr>
-                                <td class="fingerprint">${v.fingerprint.substring(0, 16)}...</td>
+                    <tbody id="visitors-body">
+                        ${data.visitors.map((v, i) => `
+                            <tr class="visitor-row" onclick="toggleDetails(${i})">
+                                <td class="fingerprint">
+                                    <span class="unfold-icon">▶</span>
+                                    ${v.fingerprint.substring(0, 16)}...
+                                </td>
                                 <td>${new Date(v.firstVisit).toLocaleString()}</td>
                                 <td>${new Date(v.lastVisit).toLocaleString()}</td>
                                 <td>${v.visitCount}</td>
+                            </tr>
+                            <tr id="details-${i}" class="details-row" style="display: none;">
+                                <td colspan="4">
+                                    <div class="details-content">
+                                        <pre>${JSON.stringify(v.details || {}, null, 2)}</pre>
+                                    </div>
+                                </td>
                             </tr>
                         `).join('')}
                     </tbody>
                 </table>
             `;
             document.getElementById('dashboard').innerHTML = html;
+        }
+
+        function toggleDetails(index) {
+            const row = document.getElementById(`details-${index}`);
+            const icon = document.querySelectorAll('.unfold-icon')[index];
+            if (row.style.display === 'none') {
+                row.style.display = 'table-row';
+                icon.classList.add('open');
+            } else {
+                row.style.display = 'none';
+                icon.classList.remove('open');
+            }
         }
 
         fetchStats();

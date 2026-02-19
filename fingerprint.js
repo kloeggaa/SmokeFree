@@ -29,7 +29,8 @@ export async function getFingerprint() {
     };
 
     const fingerprintString = JSON.stringify(data);
-    return await sha256(fingerprintString);
+    const hash = await sha256(fingerprintString);
+    return { hash, data };
 }
 
 function getCanvasFingerprint() {

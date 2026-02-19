@@ -1,0 +1,43 @@
+{
+  "stats": {
+    "totalVisits": 3,
+    "uniqueVisitors": 1
+  },
+  "visitors": {
+    "b8686870f414aa4f028db09468fb70e8e80ee47140d1aa3971d2eeacc5dc97d0": {
+      "firstVisit": "2026-02-19T07:59:22.464Z",
+      "lastVisit": "2026-02-19T08:03:43.588Z",
+      "visitCount": 3,
+      "details": {
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "language": "en-US",
+        "languages": [
+          "en-US",
+          "en"
+        ],
+        "platform": "Linux x86_64",
+        "hardwareConcurrency": 20,
+        "deviceMemory": 8,
+        "screen": {
+          "width": 1920,
+          "height": 1200,
+          "depth": 24,
+          "availWidth": 1920,
+          "availHeight": 1200
+        },
+        "timezone": "Europe/Zurich",
+        "timezoneOffset": -60,
+        "touchSupport": false,
+        "cookiesEnabled": true,
+        "localStorage": true,
+        "sessionStorage": true,
+        "indexedDB": true,
+        "canvas": "data:image/png;base64,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",
+        "webGL": {
+          "vendor": "Google Inc. (Intel)",
+          "renderer": "ANGLE (Intel, Mesa Intel(R) Iris(R) Xe Graphics (RPL-P), OpenGL ES 3.2)"
+        }
+      }
+    }
+  }
+}
